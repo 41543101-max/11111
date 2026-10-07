@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>護理系一年甲班 - 班級天地</title>
+    <style>
+        /* 全局樣式設定 */
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #50e3c2;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', "Microsoft JhengHei", sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* 導覽列 */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            background: white;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+
+        nav a:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* 主要內容區塊 */
+        .container {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
+            display: inline-block;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+        }
+
+        /* 同學介紹卡片 */
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .student-card {
+            border: 1px solid #e1e1e1;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.2s;
+            background: #fafafa;
+        }
+
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #ddd;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+        }
+
+        /* 隨機選取器控制項樣式 */
+        .picker-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            background: #f0f7ff;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .picker-controls label {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .picker-controls input[type="number"] {
+            width: 60px;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .picker-btn {
+            background-color: var(--secondary-color);
+            color: #1a5e51;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .picker-btn:hover {
+            background-color: #38cfae;
+        }
+
+        .picker-result {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .picked-tag {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* 課表表格 */
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .schedule-table th, .schedule-table td {
+            border: 1px solid #e0e0e0;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .schedule-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .schedule-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* 投票區塊 */
+        .poll-option {
+            margin: 15px 0;
+        }
+
+        .poll-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .poll-btn:hover {
+            background-color: #357abd;
+        }
+
+        .progress-bar-bg {
+            background-color: #e0e0e0;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: var(--secondary-color);
+            width: 0%;
+            transition: width 0.5s ease-in-out;
+        }
+
+        /* 活動花絮 */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .gallery-item {
+            background: #eee;
+            height: 180px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🩺 護理系一年甲班</h1>
+        <p>關懷 • 專業 • 熱情 | 我們的青春紀錄頁面</p>
+    </header>
+
+    <nav>
+        <a href="#about">班級簡介</a>
+        <a href="#students">同學介紹</a>
+        <a href="#picker">隨機點名抽籤</a>
+        <a href="#schedule">班級課表</a>
+        <a href="#poll">班級投票</a>
+        <a href="#gallery">活動花絮</a>
+    </nav>
+
+    <div class="container">
+
+        <!-- 班級簡介 -->
+        <section id="about">
+            <h2>班級簡介</h2>
+            <p>歡迎來到護理系一年甲班！我們是一群充滿熱情與抱負的未來護理師。在這裡，我們一起學習解剖學、基本護理學，並在未來的路上互相扶持、共同成長！</p>
+        </section>
+
+        <!-- 同學介紹 -->
+        <section id="students">
+            <h2>同學介紹</h2>
+            <div class="student-grid" id="studentGrid">
+                <!-- 由 JS 動態繪製，方便與抽籤系統同步 -->
+            </div>
+        </section>
+
+        <!-- 新增功能：隨機點名抽籤系統 -->
+        <section id="picker">
+            <h2>🎲 班級隨機抽籤系統</h2>
+            <p style="margin-bottom: 15px; color: #666;">適合課堂回答問題、值日生抽籤或分組活動！</p>
+
+            <div class="picker-controls">
+                <label>
+                    抽取人數：
+                    <input type="number" id="pickCount" value="1" min="1" max="10"> 人
+                </label>
+                <label>
+                    <input type="checkbox" id="allowRepeat"> 允許重複選取
+                </label>
+                <button class="picker-btn" onclick="drawStudents()">開始抽取</button>
+            </div>
+
+            <div id="pickerMessage" style="color: #d9534f; font-weight: bold; margin-bottom: 10px;"></div>
+
+            <div class="picker-result" id="pickerResult">
+                <span style="color: #888;">按下「開始抽取」按鈕顯示結果...</span>
+            </div>
+        </section>
+
+        <!-- 班級課表 -->
+        <section id="schedule">
+            <h2>班級課表 (上學期)</h2>
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th>節次 / 時間</th>
+                        <th>星期一</th>
+                        <th>星期二</th>
+                        <th>星期三</th>
+                        <th>星期四</th>
+                        <th>星期五</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>08:10 - 10:00</td>
+                        <td>解剖學</td>
+                        <td>英文閱讀</td>
+                        <td>基本護理學</td>
+                        <td>國文</td>
+                        <td>普通心理學</td>
+                    </tr>
+                    <tr>
+                        <td>10:10 - 12:00</td>
+                        <td>解剖學實驗</td>
+                        <td>全民國防</td>
+                        <td>基護實驗</td>
+                        <td>護理導論</td>
+                        <td>體育</td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" style="background: #eee; font-weight: bold;">中午休息時間</td>
+                    </tr>
+                    <tr>
+                        <td>13:30 - 15:20</td>
+                        <td>生理學</td>
+                        <td>通識課程</td>
+                        <td>社團活動</td>
+                        <td>生物化學</td>
+                        <td>自主學習</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 主題投票功能 -->
+        <section id="poll">
+            <h2>班級線上投票</h2>
+            <p><strong>目前議題：</strong>期末聚餐想要吃什麼類型的餐廳？</p>
+
+            <div class="poll-option">
+                <button class="poll-btn" onclick="vote('hotpot')">投一票</button>
+                <span>日式火鍋 (票數: <span id="count-hotpot">0</span>)</span>
+                <div class="progress-bar-bg"><div id="bar-hotpot" class="progress-bar-fill"></div></div>
+            </div>
+
+            <div class="poll-option">
+                <button class="poll-btn" onclick="vote('bbq')">投一票</button>
+                <span>韓式燒肉 (票數: <span id="count-bbq">0</span>)</span>
+                <div class="progress-bar-bg"><div id="bar-bbq" class="progress-bar-fill"></div></div>
+            </div>
+
+            <div class="poll-option">
+                <button class="poll-btn" onclick="vote('pasta')">投一票</button>
+                <span>義大利麵/披薩 (票數: <span id="count-pasta">0</span>)</span>
+                <div class="progress-bar-bg"><div id="bar-pasta" class="progress-bar-fill"></div></div>
+            </div>
+        </section>
+
+        <!-- 系上活動花絮 -->
+        <section id="gallery">
+            <h2>系上活動花絮</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item" style="background-color: #ffeaa7;">迎新茶會聚餐</div>
+                <div class="gallery-item" style="background-color: #fab1a0;">加冠典禮加油團</div>
+                <div class="gallery-item" style="background-color: #81ecec;">解剖學實驗課合照</div>
+                <div class="gallery-item" style="background-color: #74b9ff;">校慶運動會進場</div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 護理系一年甲班 版權所有 | 網頁維護：班級幹部群</p>
+    </footer>
+
+    <!-- JavaScript 邏輯 -->
+    <script>
+        // 同學資料庫
+        const studentsData = [
+            { id: 1, name: "陳小明", title: "班長", motto: "用心照顧每一位病人。", color: "#ff7675", avatarText: "班" },
+            { id: 2, name: "林美玲", title: "副班長", motto: "微笑是最好的藥方。", color: "#74b9ff", avatarText: "副" },
+            { id: 3, name: "張豪傑", title: "學藝股長", motto: "解剖學難不倒我！", color: "#55efc4", avatarText: "學" },
+            { id: 4, name: "黃怡君", title: "康樂股長", motto: "認真學習，開心生活。", color: "#a29bfe", avatarText: "康" },
+            { id: 5, name: "李哲宇", title: "體育股長", motto: "保持運動，保持健康。", color: "#ffeaa7", avatarText: "體" },
+            { id: 6, name: "王心怡", title: "衛生股長", motto: "無菌操作，安全第一。", color: "#fd79a8", avatarText: "衛" }
+        ];
+
+        // 動態渲染同學卡片
+        function renderStudents() {
+            const grid = document.getElementById("studentGrid");
+            grid.innerHTML = studentsData.map(student => `
+                <div class="student-card">
+                    <div class="avatar" style="background-color: ${student.color};">${student.avatarText}</div>
+                    <h3>${student.name}</h3>
+                    <p><strong>職位：</strong>${student.title}</p>
+                    <p><strong>座右銘：</strong>${student.motto}</p>
+                </div>
+            `).join('');
+        }
+
+        // 隨機抽籤邏輯
+        function drawStudents() {
+            const countInput = document.getElementById("pickCount");
+            const allowRepeat = document.getElementById("allowRepeat").checked;
+            const resultDiv = document.getElementById("pickerResult");
+            const msgDiv = document.getElementById("pickerMessage");
+
+            let count = parseInt(countInput.value);
+            msgDiv.innerText = "";
+
+            if (isNaN(count) || count < 1) {
+                msgDiv.innerText = "請輸入有效的抽取人數！";
+                return;
+            }
+
+            // 若「不允許重複」且「欲抽取人數大於總人數」時的防錯處理
+            if (!allowRepeat && count > studentsData.length) {
+                msgDiv.innerText = `目前名單共 ${studentsData.length} 人，不重複模式下抽取人數不可超過 ${studentsData.length} 人！`;
+                return;
+            }
+
+            let selected = [];
+
+            if (allowRepeat) {
+                // 允許重複選取
+                for (let i = 0; i < count; i++) {
+                    const randomIndex = Math.floor(Math.random() * studentsData.length);
+                    selected.push(studentsData[randomIndex].name);
+                }
+            } else {
+                // 不允許重複選取 (洗牌演算法 / 洗牌抽取)
+                let pool = [...studentsData];
+                for (let i = 0; i < count; i++) {
+                    const randomIndex = Math.floor(Math.random() * pool.length);
+                    selected.push(pool[randomIndex].name);
+                    pool.splice(randomIndex, 1); // 抽出後從池子移除
+                }
+            }
+
+            // 繪製結果標籤
+            resultDiv.innerHTML = selected.map(name => `<div class="picked-tag">🎉 ${name}</div>`).join('');
+        }
+
+        // 投票功能邏輯
+        const votes = {
+            hotpot: 12,
+            bbq: 18,
+            pasta: 8
+        };
+
+        function updatePollUI() {
+            const totalVotes = votes.hotpot + votes.bbq + votes.pasta;
+
+            for (const option in votes) {
+                document.getElementById(`count-${option}`).innerText = votes[option];
+                const percentage = totalVotes > 0 ? (votes[option] / totalVotes) * 100 : 0;
+                document.getElementById(`bar-${option}`).style.width = percentage + '%';
+            }
+        }
+
+        function vote(option) {
+            votes[option]++;
+            updatePollUI();
+            alert('感謝您的投票！');
+        }
+
+        // 初始化
+        window.onload = function() {
+            renderStudents();
+            updatePollUI();
+        };
+    </script>
+</body>
+</html>
